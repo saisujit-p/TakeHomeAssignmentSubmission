@@ -11,7 +11,9 @@ import torch
 tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large")
 model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-large")
 compute_device = "cuda" if torch.cuda.is_available() else "cpu"
+
 #Generating predictions by batching the input tweets
+
 prompt_temp=("What is the stance of the following tweet with respect to COVID-19 vaccine?  Here is the tweet. {t}  Please use exactly one word from the following 3 categories to label it: FAVOUR,AGAINST, NONE")
 batch_size=8
 
@@ -40,3 +42,6 @@ for i in tqdm(range(0,len(inp),batch_size)):
         skip_special_tokens=True
     )
   out.extend(batch_preds)
+
+df["label_pred"]=out
+df.to_csv("Q2_20230202_majority.csv",index=False)
